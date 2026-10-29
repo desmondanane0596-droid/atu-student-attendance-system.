@@ -1,0 +1,31 @@
+ATU ATTENDANCE SYSTEM — DATABASE SETUP (SUPABASE)
+
+WHAT THIS ADDS
+The database folder contains supabase_schema.sql, which creates the cloud database tables for:
+- User profiles and roles (administrator, coordinator, student)
+- Courses
+- Student course registrations
+- Attendance records
+- Course assessments
+- Student scores
+
+SETUP STEPS
+1. Create a Supabase project at https://supabase.com/ and keep the database password private.
+2. In the Supabase project, open SQL Editor > New query.
+3. Open database/supabase_schema.sql from this project, copy all its contents into the SQL Editor, and click Run.
+4. In Authentication > Users, create test users. The profiles table references Supabase Auth users, so each profile id must be the matching Auth user's UUID.
+5. Set the first administrator's role securely from the SQL Editor, after creating that user. Example (replace the email):
+
+   update public.profiles set role = 'administrator' where email = 'your-admin-email@example.com';
+
+   If no profile row exists yet, create it using the UUID shown for that user in Authentication > Users:
+
+   insert into public.profiles (id, full_name, email, role)
+   values ('REPLACE-WITH-AUTH-USER-UUID', 'System Administrator', 'your-admin-email@example.com', 'administrator');
+
+6. Never place the Supabase service_role key in browser JavaScript. Only the project's public anon/publishable key may be used in a browser, alongside Row Level Security policies.
+
+IMPORTANT CURRENT PROJECT STATUS
+The existing app.js still uses browser localStorage for its current demo login, course, registration, score, and attendance screens. This SQL file creates the real database schema, but the front-end has NOT yet been connected to Supabase. Existing demo accounts and localStorage data will not automatically appear in the cloud database.
+
+To finish connecting it, the project needs your Supabase Project URL and public anon/publishable key, plus changes to the app's authentication and data functions. Do not send your database password or service_role key in chat. The existing demo passwords are only for local testing and should not be reused for real accounts.
